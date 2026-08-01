@@ -7,7 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1vcauEmADJoGeYT1vpmgWAqyZkVDua2xi
 """
 
-!pip install deep-translator gradio
 
 import gradio as gr
 from deep_translator import GoogleTranslator  # Yahan underscore '_' aayega
