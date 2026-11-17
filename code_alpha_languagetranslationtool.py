@@ -14,8 +14,7 @@ languages = {
     'German': 'de',
     'Chinese': 'zh-CN',
     'Arabic': 'ar'
-     'Sindhi': 'si'
-     'Hindi': 'hi'
+
 }
 
 # User Inputs
