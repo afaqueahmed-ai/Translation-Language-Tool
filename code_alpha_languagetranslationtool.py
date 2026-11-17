@@ -14,6 +14,8 @@ languages = {
     'German': 'de',
     'Chinese': 'zh-CN',
     'Arabic': 'ar'
+     'Sindhi': 'si'
+     'Hindi': 'hi'
 }
 
 # User Inputs
@@ -29,7 +31,8 @@ if st.button("Translate"):
         try:
             source_code = languages[source_lang_name]
             target_code = languages[target_lang_name]
-            
+
+            time.sleep(1)
             translated = GoogleTranslator(source=source_code, target=target_code).translate(text_to_translate)
             
             st.success("### Translated Text:")
