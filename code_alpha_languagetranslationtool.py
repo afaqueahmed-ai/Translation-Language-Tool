@@ -1,3 +1,4 @@
+import time
 import streamlit as st
 from deep_translator import GoogleTranslator
 
