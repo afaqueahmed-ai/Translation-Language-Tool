@@ -1,6 +1,6 @@
 import time
 import streamlit as st
-from deep_translator import MyMemoryTranslator
+from deep_translator import GoogleTranslator
 
 # Page Title
 st.title("🌐 Language Translator Tool")
@@ -33,7 +33,7 @@ if st.button("Translate"):
             target_code = languages[target_lang_name]
 
             time.sleep(1)
-            translated = MyMemoryTranslator(source=source_code, target=target_code).translate(text_to_translate)
+            translated = GoogleTranslator(source=source_code, target=target_code).translate(text_to_translate)
             
             st.success("### Translated Text:")
             st.write(translated)
