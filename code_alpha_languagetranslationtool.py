@@ -54,7 +54,7 @@ if st.button("Translate"):
     with st.spinner("Translating..."):
       try:
         # Automatically find and use a working flash model
-        model_name = "gemini-1.5-flash"
+        model_name = "gemini-3.8-flash"
         try:
           for m in genai.list_models():
             if "generateContent" in m.supported_generation_methods and (
