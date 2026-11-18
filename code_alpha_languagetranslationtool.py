@@ -1,41 +1,71 @@
-import time
+import google.generativeai as genai
 import streamlit as st
-from deep_translator import GoogleTranslator
 
 # Page Title
-st.title("🌐 Language Translator Tool")
-st.write("Translate text easily into multiple languages.")
-
-# Language Options Mapping
-languages = {
-    'English': 'en',
-    'Urdu': 'ur',
-    'Spanish': 'es',
-    'French': 'fr',
-    'German': 'de',
-    'Chinese': 'zh-CN',
-    'Arabic': 'ar'
-
-}
+st.title("🌐 AI Language Translator")
+st.write(
+    "Translate text easily into multiple languages using Google Gemini API."
+)
 
 # User Inputs
 text_to_translate = st.text_area("Enter Text:", "")
-source_lang_name = st.selectbox("Source Language:", list(languages.keys()), index=0)
-target_lang_name = st.selectbox("Target Language:", list(languages.keys()), index=1)
+
+col1, col2 = st.columns(2)
+with col1:
+  source_lang = st.selectbox(
+      "Source Language:",
+      [
+          "English",
+          "Urdu",
+          "Sindhi",
+          "Arabic",
+          "French",
+          "Spanish",
+          "German",
+          "Chinese",
+      ],
+  )
+with col2:
+  target_lang = st.selectbox(
+      "Target Language:",
+      [
+          "Urdu",
+          "English",
+          "Sindhi",
+          "Arabic",
+          "French",
+          "Spanish",
+          "German",
+          "Chinese",
+      ],
+  )
+
+# Initialize Gemini API using Streamlit Secrets
+try:
+  genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+except Exception:
+  pass
 
 # Translate Button
 if st.button("Translate"):
-    if not text_to_translate.strip():
-        st.warning("Please enter text to translate.")
-    else:
-        try:
-            source_code = languages[source_lang_name]
-            target_code = languages[target_lang_name]
+  if not text_to_translate.strip():
+    st.warning("Please enter text to translate.")
+  else:
+    with st.spinner("Translating..."):
+      try:
+        model = genai.GenerativeModel("gemini-2.5-flash")
+        prompt = (
+            f"Translate the following text from {source_lang} to"
+            f" {target_lang}. Only give the exact translation text without any"
+            f" extra notes.\n\nText: {text_to_translate}"
+        )
 
-            time.sleep(1)
-            translated = GoogleTranslator(source=source_code, target=target_code).translate(text_to_translate)
-            
-            st.success("### Translated Text:")
-            st.write(translated)
-        except Exception as e:
-            st.error(f"Error: {str(e)}")
+        response = model.generate_content(prompt)
+
+        st.success("✨ Translated Text:")
+        st.write(response.text)
+      except Exception as e:
+        st.error(
+            f"Error: {e}. Please check if GEMINI_API_KEY is added in Streamlit"
+            " Secrets."
+        )
