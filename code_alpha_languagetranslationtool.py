@@ -53,7 +53,7 @@ if st.button("Translate"):
   else:
     with st.spinner("Translating..."):
       try:
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        model = genai.GenerativeModel("gemini-1.5-flash")
         prompt = (
             f"Translate the following text from {source_lang} to"
             f" {target_lang}. Only give the exact translation text without any"
