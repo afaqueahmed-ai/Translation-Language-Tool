@@ -53,7 +53,19 @@ if st.button("Translate"):
   else:
     with st.spinner("Translating..."):
       try:
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        # Automatically find and use a working flash model
+        model_name = "gemini-1.5-flash"
+        try:
+          for m in genai.list_models():
+            if "generateContent" in m.supported_generation_methods and (
+                "flash" in m.name
+            ):
+              model_name = m.name
+              break
+        except Exception:
+          pass
+
+        model = genai.GenerativeModel(model_name)
         prompt = (
             f"Translate the following text from {source_lang} to"
             f" {target_lang}. Only give the exact translation text without any"
