@@ -1,4 +1,4 @@
-import google.generativeai as genai
+from google import genai
 import streamlit as st
 
 # Page Title
@@ -40,12 +40,6 @@ with col2:
       ],
   )
 
-# Initialize Gemini API using Streamlit Secrets
-try:
-  genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-except Exception:
-  pass
-
 # Translate Button
 if st.button("Translate"):
   if not text_to_translate.strip():
@@ -53,31 +47,27 @@ if st.button("Translate"):
   else:
     with st.spinner("Translating..."):
       try:
-        # Automatically find and use a working flash model
-        model_name = "gemini-3.8-flash"
-        try:
-          for m in genai.list_models():
-            if "generateContent" in m.supported_generation_methods and (
-                "flash" in m.name
-            ):
-              model_name = m.name
-              break
-        except Exception:
-          pass
+        # Initialize new Google GenAI Client using Streamlit Secrets
+        client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
-        model = genai.GenerativeModel(model_name)
+        # Automatically find an available Gemini model
+        model_id = "gemini-2.5-flash"
+        for m in client.models.list():
+          if "gemini" in m.name and "flash" in m.name:
+            model_id = m.name.replace("models/", "")
+            break
+
         prompt = (
             f"Translate the following text from {source_lang} to"
             f" {target_lang}. Only give the exact translation text without any"
             f" extra notes.\n\nText: {text_to_translate}"
         )
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model=model_id, contents=prompt
+        )
 
         st.success("✨ Translated Text:")
         st.write(response.text)
       except Exception as e:
-        st.error(
-            f"Error: {e}. Please check if GEMINI_API_KEY is added in Streamlit"
-            " Secrets."
-        )
+        st.error(f"Error: {e}")
