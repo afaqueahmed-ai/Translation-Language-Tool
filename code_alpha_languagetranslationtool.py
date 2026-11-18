@@ -47,15 +47,8 @@ if st.button("Translate"):
   else:
     with st.spinner("Translating..."):
       try:
-        # Initialize new Google GenAI Client using Streamlit Secrets
+        # Initialize Google GenAI Client using Streamlit Secrets
         client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
-
-        # Automatically find an available Gemini model
-        model_id = "gemini-2.5-flash"
-        for m in client.models.list():
-          if "gemini" in m.name and "flash" in m.name:
-            model_id = m.name.replace("models/", "")
-            break
 
         prompt = (
             f"Translate the following text from {source_lang} to"
@@ -63,8 +56,9 @@ if st.button("Translate"):
             f" extra notes.\n\nText: {text_to_translate}"
         )
 
+        # Directly use the recommended model
         response = client.models.generate_content(
-            model=model_id, contents=prompt
+            model="gemini-3.8-flash", contents=prompt
         )
 
         st.success("✨ Translated Text:")
